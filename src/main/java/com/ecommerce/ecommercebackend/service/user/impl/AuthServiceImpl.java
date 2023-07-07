@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.ecommerce.ecommercebackend.dto.AuthenticationRequest;
 import com.ecommerce.ecommercebackend.dto.AuthenticationResponse;
+import com.ecommerce.ecommercebackend.model.shopping.ShoppingSession;
 import com.ecommerce.ecommercebackend.model.user.User;
+import com.ecommerce.ecommercebackend.repository.shopping.ShoppingSessionRepository;
 import com.ecommerce.ecommercebackend.repository.user.UserRepository;
 import com.ecommerce.ecommercebackend.security.JwtUtils;
 import com.ecommerce.ecommercebackend.service.user.AuthService;
@@ -19,6 +21,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ShoppingSessionRepository sessionRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -35,7 +40,9 @@ public class AuthServiceImpl implements AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        ShoppingSession session = ShoppingSession.builder().user(savedUser).build();
+        sessionRepository.save(session);
 
         String token = jwtUtils.generateToken(user.getEmail());
         return AuthenticationResponse.builder().token(token).build();
@@ -45,8 +52,8 @@ public class AuthServiceImpl implements AuthService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
-                    request.getEmail(),
-                    request.getPassword()));
+                        request.getEmail(),
+                        request.getPassword()));
         User user = userRepository.findFirstByEmail(request.getEmail());
         if (user == null) {
             throw new UsernameNotFoundException("Incorrect username or password");

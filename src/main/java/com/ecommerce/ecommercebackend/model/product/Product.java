@@ -6,7 +6,7 @@ import com.ecommerce.ecommercebackend.model.shopping.CartItem;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,7 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +35,7 @@ public class Product {
     private int quantity;
     private double price;
     private int rating;
-    @Lob
+    @Column(length = 5000)
     private String description;
 
     @ManyToOne
@@ -44,15 +43,15 @@ public class Product {
     @JsonBackReference
     private ProductCategory productCategory;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product")
     @JsonManagedReference
     private List<ProductDetails> details;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product")
     @JsonManagedReference
     private List<ProductImage> images;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product")
     @JsonManagedReference
-    private CartItem cartItem;
+    private List<CartItem> cartItems;
 }

@@ -6,7 +6,6 @@ import com.ecommerce.ecommercebackend.model.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,7 +30,7 @@ public class ShoppingSession {
     private int id;
     private double totalCost;
 
-    @OneToMany(mappedBy = "shoppingSession", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shoppingSession")
     @JsonManagedReference
     private List<CartItem> cartItems;
 

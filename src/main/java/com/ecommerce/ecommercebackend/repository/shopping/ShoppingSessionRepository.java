@@ -7,5 +7,5 @@ import com.ecommerce.ecommercebackend.model.shopping.ShoppingSession;
 
 @Repository
 public interface ShoppingSessionRepository extends JpaRepository<ShoppingSession, Integer> {
-
+    ShoppingSession findByUser_Email(String email);
 }

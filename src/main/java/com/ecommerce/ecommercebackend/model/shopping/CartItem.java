@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +28,12 @@ public class CartItem {
     private int id;
     private int quantity;
 
-    @OneToOne
+    // @OneToOne
+    // @JoinColumn(name = "product_id")
+    // @JsonBackReference
+    // private Product product;
+
+    @ManyToOne
     @JoinColumn(name = "product_id")
     @JsonBackReference
     private Product product;

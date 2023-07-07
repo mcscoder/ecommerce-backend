@@ -14,6 +14,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class JwtUtils {
@@ -28,6 +29,23 @@ public class JwtUtils {
      */
     public String extractUsername(String token) {
         return extractClaims(token, Claims::getSubject);
+    }    
+
+    /**
+     * Extract the username from the client request
+     * 
+     * @param request The client request
+     * @return The extracted username from request
+     */
+    public String extractUsername(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        String username = null;
+        String jwt = null;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            jwt = authHeader.substring(7);
+            username = extractUsername(jwt);
+        }
+        return username;
     }
 
     /**
